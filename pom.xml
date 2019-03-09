@@ -12,11 +12,11 @@
     </properties>
     
     <dependencies>
-        <dependency>
+<!--        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>11.0.1</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
@@ -33,7 +33,6 @@
             <version>1.7.26</version>
             <scope>test</scope>
         </dependency>
-                
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
