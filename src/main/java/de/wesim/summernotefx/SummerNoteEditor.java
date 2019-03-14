@@ -2,18 +2,13 @@ package de.wesim.summernotefx;
 
 import com.sun.javafx.webkit.WebConsoleListener;
 import org.apache.commons.text.StringEscapeUtils;
-import org.w3c.dom.Element;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.html.HTMLAnchorElement;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
+import java.io.InputStream;
+import java.net.URL;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker.State;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebErrorEvent;
 import javafx.scene.web.WebView;
@@ -22,8 +17,6 @@ import org.slf4j.LoggerFactory;
 
 // TODO Check for updates in order to make image import work:
 // https://bugs.java.com/view_bug.do?bug_id=8197790
-// TODO Konsolidieren
-// TODO Lokalisierung !!!
 public class SummerNoteEditor extends StackPane {
 
     final WebView webview = new WebView();
@@ -46,7 +39,7 @@ public class SummerNoteEditor extends StackPane {
 
     public void setHTMLContent(String content) {
         final String content_js = StringEscapeUtils.escapeEcmaScript(content);
-        getLogger().debug("Setting content...: {}", content_js);
+        getLogger().debug("Setting content : {}", content_js);
         webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
         setContentUpdate(false);
     }
@@ -87,7 +80,7 @@ public class SummerNoteEditor extends StackPane {
         WebConsoleListener.setDefaultListener((WebView wv, String msg, int i, String source) -> {
             getLogger().info("JS Console [{}, {}]: {}", source, i, msg);
         });
-                
+
         final SummerNoteEditor backReference = this;
         webview.getEngine().getLoadWorker().stateProperty().addListener(
                 new SummernoteWhenLoadedListener(backReference, editorContent, null));
@@ -104,6 +97,7 @@ public class SummerNoteEditor extends StackPane {
         });
 
         var htmlSource = prepareHtmlSource();
+        htmlSource = addI18NSupport(htmlSource);
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
 
@@ -118,25 +112,55 @@ public class SummerNoteEditor extends StackPane {
     }
 
     private String prepareHtmlSource() {
-        final String jqueryURL = SummerNoteEditor.class.getResource("/jquery.slim.min.js").toExternalForm();
-        final String summernoteLiteJSURL = SummerNoteEditor.class.getResource("/summernote-lite.js").toExternalForm();
-        final String summernoteCSSURL = SummerNoteEditor.class.getResource("/summernote-lite.css").toExternalForm();
-        final String markJSURL = SummerNoteEditor.class.getResource("/jquery.mark.min.js").toExternalForm();
-        final String i18NURL = SummerNoteEditor.class.getResource("/lang/summernote-de-DE.min.js").toExternalForm();
-        String htmlSource = "ERROR";
-        try {
-            htmlSource = new String(SummerNoteEditor.class.getResource("/de/wesim/summernotefx/summernote.html").openStream().readAllBytes(), "UTF-8");
-            htmlSource = htmlSource.replace("%SUMMERNOTE_FONT%", SummerNoteEditor.class.getResource("/font/summernote.woff").toExternalForm());
-            htmlSource = htmlSource.replace("%JQUERY_URL%", jqueryURL);
-            htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
-            htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
-            htmlSource = htmlSource.replace("%MARK_JS_URL%", markJSURL);
-            htmlSource = htmlSource.replace("%I18N_URL%", i18NURL);
+        final URL jQueryResource = SummerNoteEditor.class.getResource("/jquery.slim.min.js");
+        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/summernote-lite.js");
+        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/summernote-lite.css");
+        final URL markJSResource = SummerNoteEditor.class.getResource("/jquery.mark.min.js");
+        final URL fontResource = SummerNoteEditor.class.getResource("/font/summernote.woff");
+        final URL summernoteHTMLResource = SummerNoteEditor.class.getResource("/de/wesim/summernotefx/summernote.html");
 
-            getLogger().debug(htmlSource);
-        } catch (RuntimeException | IOException ex) {
-            getLogger().error("Preparing HTML source failed: {}", ex.getLocalizedMessage(), ex);
+        var htmlSource = "ERROR";
+        if (jQueryResource == null || summernoteLiteJS == null || summernoteCSSResource == null
+                || markJSResource == null || fontResource == null || summernoteHTMLResource == null) {
+            return htmlSource;
         }
+        try (InputStream summernoteHTMLIS = summernoteHTMLResource.openStream()) {
+            htmlSource = new String(summernoteHTMLIS.readAllBytes(), "UTF-8");
+        } catch (IOException ex) {
+            getLogger().error("Loading HTML source failed: {}", ex.getLocalizedMessage(), ex);
+            return htmlSource;
+        }
+        final String jqueryURL = jQueryResource.toExternalForm();
+        final String summernoteLiteJSURL = summernoteLiteJS.toExternalForm();
+        final String summernoteCSSURL = summernoteCSSResource.toExternalForm();
+        final String markJSURL = markJSResource.toExternalForm();
+        final String fontURL = fontResource.toExternalForm();
+        htmlSource = htmlSource.replace("%SUMMERNOTE_FONT%", fontURL);
+        htmlSource = htmlSource.replace("%JQUERY_URL%", jqueryURL);
+        htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
+        htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
+        htmlSource = htmlSource.replace("%MARK_JS_URL%", markJSURL);
+
+        getLogger().debug(htmlSource);
+
+        return htmlSource;
+    }
+
+    private String addI18NSupport(String htmlSource) {
+        String locale = System.getProperty("user.language") + "-" + System.getProperty("user.country");
+        final String variant = System.getProperty("user.variant");
+        if (variant != null) {
+            locale = locale + "-" + variant;
+        }
+        var i18NFile = SummerNoteEditor.class.getResource("/lang/summernote-" + locale + ".min.js");
+        if (i18NFile == null) {
+            return htmlSource;
+        }
+        final String i18NURL = i18NFile.toExternalForm();
+        htmlSource = htmlSource.replace("%I18N_URL%", i18NURL);
+        htmlSource = htmlSource.replace("en-US", locale);
+        getLogger().info(htmlSource);
+
         return htmlSource;
     }
 }
