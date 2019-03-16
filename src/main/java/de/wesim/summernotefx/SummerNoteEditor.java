@@ -5,6 +5,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Map;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,12 +24,12 @@ public class SummerNoteEditor extends StackPane {
 
     private final HostServices hostServices;
 
-    void findItems(String entered) {
+    public void findItems(String entered) {
         final String content_js = StringEscapeUtils.escapeEcmaScript(entered);
         webview.getEngine().executeScript("findOccurrences('" + content_js + "');");
     }
 
-    public String getHTMLContent() {
+    private String getHTMLContent() {
         final String editingCode = (String) webview.getEngine().executeScript("getEditorContent();");
         return editingCode;
     }
@@ -37,7 +38,7 @@ public class SummerNoteEditor extends StackPane {
         return this.getHTMLContent();
     }
 
-    public void setHTMLContent(String content) {
+    private void setHTMLContent(String content) {
         final String content_js = StringEscapeUtils.escapeEcmaScript(content);
         getLogger().debug("Setting content : {}", content_js);
         webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
@@ -74,7 +75,7 @@ public class SummerNoteEditor extends StackPane {
     }
 
     // TODO CSSProperties 
-    public SummerNoteEditor(HostServices hostServices, String editorContent) {
+    public SummerNoteEditor(HostServices hostServices, String editorContent, Map<String, String> extraCSSProperties) {
         this.hostServices = hostServices;
 
         WebConsoleListener.setDefaultListener((WebView wv, String msg, int i, String source) -> {
@@ -83,7 +84,7 @@ public class SummerNoteEditor extends StackPane {
 
         final SummerNoteEditor backReference = this;
         webview.getEngine().getLoadWorker().stateProperty().addListener(
-                new SummernoteWhenLoadedListener(backReference, editorContent, null));
+                new SummernoteWhenLoadedListener(backReference, editorContent, extraCSSProperties));
         webview.getEngine().getLoadWorker().exceptionProperty().addListener((ObservableValue<? extends Throwable> ov, Throwable t, Throwable t1) -> {
             getLogger().error("SummernoteEditorFX Webview exception, ov: {}", ov.getValue().getLocalizedMessage(), ov.getValue());
             getLogger().error("SummernoteEditorFX Webview exception, t: {}", t.getLocalizedMessage(), t);
@@ -98,9 +99,10 @@ public class SummerNoteEditor extends StackPane {
 
         var htmlSource = prepareHtmlSource();
         htmlSource = addI18NSupport(htmlSource);
+        // dump generated HTML source when you need it
+        // getLogger().info(htmlSource);
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
-
     }
 
     public Logger getLogger() {
@@ -141,8 +143,6 @@ public class SummerNoteEditor extends StackPane {
         htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
         htmlSource = htmlSource.replace("%MARK_JS_URL%", markJSURL);
 
-        getLogger().debug(htmlSource);
-
         return htmlSource;
     }
 
@@ -159,8 +159,6 @@ public class SummerNoteEditor extends StackPane {
         final String i18NURL = i18NFile.toExternalForm();
         htmlSource = htmlSource.replace("%I18N_URL%", i18NURL);
         htmlSource = htmlSource.replace("en-US", locale);
-        getLogger().info(htmlSource);
-
         return htmlSource;
     }
 }

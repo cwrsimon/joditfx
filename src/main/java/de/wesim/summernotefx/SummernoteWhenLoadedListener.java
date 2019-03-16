@@ -1,7 +1,6 @@
 package de.wesim.summernotefx;
 
 import java.util.Map;
-import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
