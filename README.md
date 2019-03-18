@@ -1,6 +1,6 @@
 # summernotefx
 SummernoteFX is a simple wrapper that allows using the summernote HTML 
-editor from [summernote.org](https://www.summernote.org) as a JavaFX component. It is implemented in Java 11 and uses OpenJFX 11.0.2.
+editor from [summernote.org](https://www.summernote.org) as a JavaFX component. It is implemented in Java 11 and uses OpenJFX 12.
 
 ![Screenshot](https://raw.github.com/cwrsimon/summernotefx/master/src/main/screenshots/screenshot1.png)
 
@@ -29,5 +29,4 @@ Locate *src/test/java/de/wesim/summernotefx/* and run *RunDemoAppInIDE.java*.
 # Planned features
 - deployment to Maven Central Repository
 - more configuration options that cover more of the many options offered by *summernote*
-- support for inserting images (probably comes with OpenJFX 12)
 
