@@ -16,8 +16,6 @@ import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO Check for updates in order to make image import work:
-// https://bugs.java.com/view_bug.do?bug_id=8197790
 public class SummerNoteEditor extends StackPane {
 
     final WebView webview = new WebView();
@@ -74,7 +72,7 @@ public class SummerNoteEditor extends StackPane {
                 + styleName + "','" + value + "');");
     }
 
-    // TODO CSSProperties 
+    
     public SummerNoteEditor(HostServices hostServices, String editorContent, Map<String, String> extraCSSProperties) {
         this.hostServices = hostServices;
 
@@ -99,6 +97,7 @@ public class SummerNoteEditor extends StackPane {
 
         var htmlSource = prepareHtmlSource();
         htmlSource = addI18NSupport(htmlSource);
+        // TODO make this a debug feature with a source target
         // dump generated HTML source when you need it
         // getLogger().info(htmlSource);
         webview.getEngine().loadContent(htmlSource);

@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-
+// TODO Integrate content update
 public class DemoApp extends Application {
     
     @Override

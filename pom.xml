@@ -37,7 +37,7 @@
     <build>
         <plugins>
             <plugin>
-                <!-- TODO Unterordner entsprechend artifactId anlegen -->
+                <!-- TODO Create subfolders in JAR named after the respective artifactIds -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.1.1</version>
