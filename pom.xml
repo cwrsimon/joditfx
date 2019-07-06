@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>12</version>
+            <version>12.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -58,9 +58,9 @@
                                     <includes>**/dist/jquery.slim.min.js</includes>        
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.webjars.bower</groupId>
+                                    <groupId>org.webjars.npm</groupId>
                                     <artifactId>summernote</artifactId>
-                                    <version>0.8.11</version>
+                                    <version>0.8.12</version>
                                     <includes>**/dist/summernote-lite**,**/dist/font/*.woff,**/dist/lang/*.min.js</includes>
                                     <excludes>**/*.map</excludes>
                                 </artifactItem>
@@ -95,7 +95,7 @@
                                     <directory>${project.build.directory}/webjars/META-INF/resources/webjars/jquery/3.3.1/dist</directory>
                                 </resource>
                                 <resource>
-                                    <directory>${project.build.directory}/webjars/META-INF/resources/webjars/summernote/0.8.11/dist</directory>
+                                    <directory>${project.build.directory}/webjars/META-INF/resources/webjars/summernote/0.8.12/dist</directory>
                                 </resource>
                                 <resource>
                                     <directory>${project.build.directory}/webjars/META-INF/resources/webjars/mark.js/8.11.1/dist</directory>
