@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.wesim</groupId>
     <artifactId>summernotefx</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,7 +61,7 @@
                                     <groupId>org.webjars.npm</groupId>
                                     <artifactId>summernote</artifactId>
                                     <version>0.8.12</version>
-                                    <includes>**/dist/summernote-lite**,**/dist/font/*.woff,**/dist/lang/*.min.js</includes>
+                                    <includes>**/dist/summernote-lite*min.js,**/dist/summernote-lite.css,**/dist/font/*.woff,**/dist/lang/*.min.js</includes>
                                     <excludes>**/*.map</excludes>
                                 </artifactItem>
                                 <artifactItem>

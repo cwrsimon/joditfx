@@ -114,7 +114,7 @@ public class SummerNoteEditor extends StackPane {
 
     private String prepareHtmlSource() {
         final URL jQueryResource = SummerNoteEditor.class.getResource("/jquery.slim.min.js");
-        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/summernote-lite.js");
+        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/summernote-lite.min.js");
         final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/summernote-lite.css");
         final URL markJSResource = SummerNoteEditor.class.getResource("/jquery.mark.min.js");
         final URL fontResource = SummerNoteEditor.class.getResource("/font/summernote.woff");
