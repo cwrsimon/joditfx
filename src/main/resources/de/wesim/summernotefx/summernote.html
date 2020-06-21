@@ -73,7 +73,7 @@
 
             setEditorContent = function (content) {
                 $('#editor').summernote('reset');
-                $('#editor').summernote('code', content);
+                $('#editor').summernote('pasteHTML', content);
             }
 
             findOccurrences = function (searchString) {
