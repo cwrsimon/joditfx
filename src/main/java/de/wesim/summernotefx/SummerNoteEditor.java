@@ -39,7 +39,8 @@ public class SummerNoteEditor extends StackPane {
     private void setHTMLContent(String content) {
         final String content_js = StringEscapeUtils.escapeEcmaScript(content);
         getLogger().debug("Setting content : {}", content_js);
-        webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
+        // FIXME
+        //webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
         setContentUpdate(false);
     }
 
@@ -96,10 +97,11 @@ public class SummerNoteEditor extends StackPane {
         });
 
         var htmlSource = prepareHtmlSource();
-        htmlSource = addI18NSupport(htmlSource);
+//        htmlSource = addI18NSupport(htmlSource);
         // TODO make this a debug feature with a source target
         // dump generated HTML source when you need it
-        // getLogger().info(htmlSource);
+         getLogger().info(htmlSource);
+       //  webview.getEngine().setUserStyleSheetLocation("file:///C:/msys64/home/cwrsi/summernotefx/target/classes/jodit.min.css");
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
     }
@@ -113,16 +115,14 @@ public class SummerNoteEditor extends StackPane {
     }
 
     private String prepareHtmlSource() {
-        final URL jQueryResource = SummerNoteEditor.class.getResource("/jquery.slim.min.js");
-        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/summernote-lite.min.js");
-        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/summernote-lite.css");
-        final URL markJSResource = SummerNoteEditor.class.getResource("/jquery.mark.min.js");
-        final URL fontResource = SummerNoteEditor.class.getResource("/font/summernote.woff");
+        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/jodit.min.js");
+        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/jodit.es2018.min.css");
         final URL summernoteHTMLResource = SummerNoteEditor.class.getResource("/de/wesim/summernotefx/summernote.html");
-
+        
         var htmlSource = "ERROR";
-        if (jQueryResource == null || summernoteLiteJS == null || summernoteCSSResource == null
-                || markJSResource == null || fontResource == null || summernoteHTMLResource == null) {
+        if ( summernoteLiteJS == null 
+                || summernoteCSSResource == null
+                || summernoteHTMLResource == null) {
             return htmlSource;
         }
         try (InputStream summernoteHTMLIS = summernoteHTMLResource.openStream()) {
@@ -131,16 +131,10 @@ public class SummerNoteEditor extends StackPane {
             getLogger().error("Loading HTML source failed: {}", ex.getLocalizedMessage(), ex);
             return htmlSource;
         }
-        final String jqueryURL = jQueryResource.toExternalForm();
         final String summernoteLiteJSURL = summernoteLiteJS.toExternalForm();
         final String summernoteCSSURL = summernoteCSSResource.toExternalForm();
-        final String markJSURL = markJSResource.toExternalForm();
-        final String fontURL = fontResource.toExternalForm();
-        htmlSource = htmlSource.replace("%SUMMERNOTE_FONT%", fontURL);
-        htmlSource = htmlSource.replace("%JQUERY_URL%", jqueryURL);
         htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
         htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
-        htmlSource = htmlSource.replace("%MARK_JS_URL%", markJSURL);
 
         return htmlSource;
     }

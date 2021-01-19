@@ -37,7 +37,8 @@ public class SummernoteWhenLoadedListener implements ChangeListener<Worker.State
         window.setMember("app", backReference);
         if (cssProperties != null && !cssProperties.isEmpty()) {
             for (String cssProperty : cssProperties.keySet()) {
-                this.backReference.setCssStyle(cssProperty, this.cssProperties.get(cssProperty));
+                // FIXME
+                //   this.backReference.setCssStyle(cssProperty, this.cssProperties.get(cssProperty));
             }
         }
         this.backReference.setHtmlText(this.editorContent);

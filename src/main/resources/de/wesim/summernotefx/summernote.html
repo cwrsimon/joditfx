@@ -3,20 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Summernote Editor</title>
-        <script src="%JQUERY_URL%"></script>
-        <link href="%SUMMERNOTE_LITE_CSS_URL%" rel="stylesheet">
+        <link href="%SUMMERNOTE_LITE_CSS_URL%" type="text/css" rel="stylesheet">
         <script src="%SUMMERNOTE_LITE_JS_URL%"></script>
-        <script src="%MARK_JS_URL%"></script>
-        <script src="%I18N_URL%"></script>
         <style>
-            /* a necessary override, so can we load the font from the JAR file */
-            @font-face {
-                font-family: "summernote";
-                font-style: normal;
-                font-weight: normal;
-                src: url("%SUMMERNOTE_FONT%") format("woff");
-            }
-
             html, body {
                 height: 100%;
                 margin:0;
@@ -39,49 +28,26 @@
         <div id="editor"></div>
         <script>
 
-            $('#editor').summernote({
-                placeholder: 'Lorem ipsum ...',
-                tabsize: 2,
-                lang: 'en-US',
-                callbacks: {
-                    onInit: function () {
-                        $('#editor').summernote('fullscreen.toggle');
-                    },
-                    onChange: function (contents, $editable) {
-                        //console.log('onChange:', contents, $editable);
-                        if (typeof app !== 'undefined') {
-                            app.setContentUpdate(true);
-                        }
-                    }
-                },
-                toolbar: [
-                    ['style', ['style']],
-                    ['fontname', ['fontname', 'fontsize']],
-                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-                    ['color', ['forecolor', 'backcolor']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'hr']],
-                    ['view', ['codeview', 'help']],
-                ]
-            });
-
+           // Initialisierung hier
+           const jodit = new Jodit('#editor', {
+                 "height": "100%" });
             getEditorContent = function () {
-                $('.note-editable').unmark();
-                return $('#editor').summernote('code');
+            //    $('.note-editable').unmark();
+            //    return $('#editor').summernote('code');
             };
 
             setEditorContent = function (content) {
-                $('#editor').summernote('reset');
-                $('#editor').summernote('pasteHTML', content);
+            //    $('#editor').summernote('reset');
+            //    $('#editor').summernote('pasteHTML', content);
             }
 
+
             findOccurrences = function (searchString) {
-                $('.note-editable').mark(searchString);
+           //     $('.note-editable').mark(searchString);
             }
 
             setInlineStyle = function (style_name, value) {
-                $('.note-editable').css(style_name, value);
+           //     $('.note-editable').css(style_name, value);
             }
         </script>
     </body>
