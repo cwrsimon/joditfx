@@ -1,6 +1,5 @@
 package de.wesim.summernotefx;
 
-import de.wesim.summernotefx.DemoApp;
 import java.io.IOException;
 
 // Run this class from within your IDE.

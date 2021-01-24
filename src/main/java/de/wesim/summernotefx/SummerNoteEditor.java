@@ -39,8 +39,7 @@ public class SummerNoteEditor extends StackPane {
     private void setHTMLContent(String content) {
         final String content_js = StringEscapeUtils.escapeEcmaScript(content);
         getLogger().debug("Setting content : {}", content_js);
-        // FIXME
-        //webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
+        webview.getEngine().executeScript("setEditorContent('" + content_js + "');");
         setContentUpdate(false);
     }
 
@@ -97,11 +96,12 @@ public class SummerNoteEditor extends StackPane {
         });
 
         var htmlSource = prepareHtmlSource();
-//        htmlSource = addI18NSupport(htmlSource);
+        var cssURL = prepareCssUrl();
+        htmlSource = addI18NSupport(htmlSource);
         // TODO make this a debug feature with a source target
         // dump generated HTML source when you need it
          getLogger().info(htmlSource);
-       //  webview.getEngine().setUserStyleSheetLocation("file:///C:/msys64/home/cwrsi/summernotefx/target/classes/jodit.min.css");
+        webview.getEngine().setUserStyleSheetLocation(cssURL);
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
     }
@@ -114,14 +114,17 @@ public class SummerNoteEditor extends StackPane {
         return this.webview;
     }
 
+    private String prepareCssUrl() {
+        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/jodit.min.css");
+        return summernoteCSSResource.toExternalForm();
+    }
+    
     private String prepareHtmlSource() {
         final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/jodit.min.js");
-        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/jodit.es2018.min.css");
         final URL summernoteHTMLResource = SummerNoteEditor.class.getResource("/de/wesim/summernotefx/summernote.html");
         
         var htmlSource = "ERROR";
         if ( summernoteLiteJS == null 
-                || summernoteCSSResource == null
                 || summernoteHTMLResource == null) {
             return htmlSource;
         }
@@ -132,26 +135,14 @@ public class SummerNoteEditor extends StackPane {
             return htmlSource;
         }
         final String summernoteLiteJSURL = summernoteLiteJS.toExternalForm();
-        final String summernoteCSSURL = summernoteCSSResource.toExternalForm();
         htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
-        htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
 
         return htmlSource;
     }
 
     private String addI18NSupport(String htmlSource) {
-        String locale = System.getProperty("user.language") + "-" + System.getProperty("user.country");
-        final String variant = System.getProperty("user.variant");
-        if (variant != null) {
-            locale = locale + "-" + variant;
-        }
-        var i18NFile = SummerNoteEditor.class.getResource("/lang/summernote-" + locale + ".min.js");
-        if (i18NFile == null) {
-            return htmlSource;
-        }
-        final String i18NURL = i18NFile.toExternalForm();
-        htmlSource = htmlSource.replace("%I18N_URL%", i18NURL);
-        htmlSource = htmlSource.replace("en-US", locale);
+        var locale = System.getProperty("user.language");
+        htmlSource = htmlSource.replace("%I18N%", locale);
         return htmlSource;
     }
 }

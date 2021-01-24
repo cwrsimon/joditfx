@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Summernote Editor</title>
-        <link href="%SUMMERNOTE_LITE_CSS_URL%" type="text/css" rel="stylesheet">
+        <!-- <link href="%SUMMERNOTE_LITE_CSS_URL%" type="text/css" rel="stylesheet"> -->
         <script src="%SUMMERNOTE_LITE_JS_URL%"></script>
         <style>
             html, body {
@@ -30,15 +30,40 @@
 
            // Initialisierung hier
            const jodit = new Jodit('#editor', {
-                 "height": "100%" });
+                 "uploader": {
+                 "insertImageAsBase64URI": true
+                 },
+                 "height": "100%",
+                 "disablePlugins": "source,copy-format,preview,print,video,file,media,sticky,fullsize,about",
+                 "toolbarButtonSize": "small",
+                 "language": "%I18N%",
+                  "buttonsSM": [
+        'bold',
+        'strikethrough',
+        'underline',
+        'italic', '|',
+        'ul',
+        'ol', '|',
+        'outdent', 'indent',  '|',
+        'font',
+        'fontsize',
+        'brush',
+        'paragraph', '|',
+        'image',
+        'table',
+        'link', '|',
+        'align', 'undo', 'redo', '|',
+        'hr',
+        'eraser', '|',
+        'symbol'
+    ]});
+             const editor_node = document.getElementById("editor");
             getEditorContent = function () {
-            //    $('.note-editable').unmark();
-            //    return $('#editor').summernote('code');
+                return jodit.value;
             };
 
             setEditorContent = function (content) {
-            //    $('#editor').summernote('reset');
-            //    $('#editor').summernote('pasteHTML', content);
+                jodit.value = content;
             }
 
 
@@ -48,6 +73,12 @@
 
             setInlineStyle = function (style_name, value) {
            //     $('.note-editable').css(style_name, value);
+            }
+            window.open = function(param) {
+                console.log(param);
+               // console.log(param);
+                console.log(window.app);
+                window.app.openURL(param);
             }
         </script>
     </body>

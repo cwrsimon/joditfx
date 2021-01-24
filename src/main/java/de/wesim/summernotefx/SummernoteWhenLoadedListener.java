@@ -50,19 +50,12 @@ public class SummernoteWhenLoadedListener implements ChangeListener<Worker.State
             if (classValue == null) {
                 continue;
             }
-            if (classValue.contains("note-editable")) {
+            if (classValue.contains("jodit-wysiwyg")) {
                 // clicks here are not supposed to open any urls
                 var eventTarget = (EventTarget) curElem;
                 eventTarget.addEventListener("click", new HandleAnchorClicksEventListener(false), false);
-                continue;
-            }
-            if (classValue.contains("note-link-popover")) {
-                // only this only may actually open a url
-                var eventTarget = (EventTarget) curElem;
-                eventTarget.addEventListener("click", new HandleAnchorClicksEventListener(true), false);
             }
         }
-
     }
 
     private class HandleAnchorClicksEventListener implements EventListener {
@@ -82,15 +75,16 @@ public class SummernoteWhenLoadedListener implements ChangeListener<Worker.State
 
             final HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
             final String targetAttr = anchorElement.getTarget();
-            if (targetAttr.equals("_blank")) {
+            //if (targetAttr.equals("_blank")) {
                 event.preventDefault();
-            }
-            if (!openURL) {
-                return;
-            }
+            //}
+          //  if (!openURL) {
+            //    return;
+            //}
+            // FIXME
             // open url with host system's default
-            final String url = anchorElement.getHref();
-            backReference.openURL(url);
+           // final String url = anchorElement.getHref();
+           // backReference.openURL(url);
         }
     }
 }
