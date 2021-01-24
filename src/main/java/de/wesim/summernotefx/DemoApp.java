@@ -3,6 +3,7 @@ package de.wesim.summernotefx;
 import java.util.Optional;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -28,22 +29,11 @@ public class DemoApp extends Application {
         final Menu menu = new Menu("Public API methods");
         final MenuItem getHtmlText = new MenuItem("getHtmlText()");
         final MenuItem setHtmlText = new MenuItem("setHtmlText(String content)");
-        final MenuItem find = new MenuItem("findItems()");
         final MenuItem quit = new MenuItem("Quit");
-        menu.getItems().addAll(getHtmlText, setHtmlText, find, new SeparatorMenuItem(), quit);
+        menu.getItems().addAll(getHtmlText, setHtmlText, new SeparatorMenuItem(), quit);
         menuBar.getMenus().add(menu);
         quit.setOnAction(event -> {
                 primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
-        });
-        find.setOnAction(e -> {
-            final TextInputDialog dialog
-                    = new TextInputDialog("Find this text ...");
-            final Optional<String> result = dialog.showAndWait();
-            if (!result.isPresent()) {
-                return;
-            }
-            final String entered = result.get();
-            editor.findItems(entered);
         });
         getHtmlText.setOnAction(e-> {
             final String htmlText = editor.getHtmlText();
@@ -61,9 +51,21 @@ public class DemoApp extends Application {
         mainPane.setTop(menuBar);
         mainPane.setBottom(area);
         
-        primaryStage.setTitle("SummernoteFX Demo Application");
+        //primaryStage.setTitle("SummernoteFX Demo Application");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        primaryStage.titleProperty()
+                .bind(Bindings.createStringBinding(
+                        () -> { 
+                            var ret_string = "SummernoteFX Demo Application";
+                            if (editor.contentUpdateProperty().get()) {
+                                ret_string = ret_string + " - Changed";
+                            }
+                            return ret_string; }, 
+                
+                editor.contentUpdateProperty()));
+                
     }
 
     /* 

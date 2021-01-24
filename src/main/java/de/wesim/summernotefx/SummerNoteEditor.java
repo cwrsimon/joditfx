@@ -22,11 +22,6 @@ public class SummerNoteEditor extends StackPane {
 
     private final HostServices hostServices;
 
-    public void findItems(String entered) {
-        final String content_js = StringEscapeUtils.escapeEcmaScript(entered);
-        webview.getEngine().executeScript("findOccurrences('" + content_js + "');");
-    }
-
     private String getHTMLContent() {
         final String editingCode = (String) webview.getEngine().executeScript("getEditorContent();");
         return editingCode;
@@ -67,6 +62,7 @@ public class SummerNoteEditor extends StackPane {
         return contentUpdate.get();
     }
 
+    @Deprecated
     public void setCssStyle(String styleName, String value) {
         webview.getEngine().executeScript("setInlineStyle('"
                 + styleName + "','" + value + "');");
@@ -100,7 +96,7 @@ public class SummerNoteEditor extends StackPane {
         htmlSource = addI18NSupport(htmlSource);
         // TODO make this a debug feature with a source target
         // dump generated HTML source when you need it
-         getLogger().info(htmlSource);
+        // getLogger().info(htmlSource);
         webview.getEngine().setUserStyleSheetLocation(cssURL);
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
