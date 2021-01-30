@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.wesim</groupId>
     <artifactId>joditfx</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,7 +36,6 @@
     <build>
         <plugins>
             <plugin>
-                <!-- TODO Create subfolders in JAR named after the respective artifactIds -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.1.1</version>
@@ -49,28 +48,13 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-<!--                                <artifactItem>
-                                    <groupId>org.webjars.bower</groupId>
-                                    <artifactId>jquery</artifactId>
-                                    <version>3.3.1</version>
-                                    <overWrite>true</overWrite>         
-                                    <includes>**/dist/jquery.slim.min.js</includes>        
-                                </artifactItem>-->
                                 <artifactItem>
                                     <groupId>org.webjars.npm</groupId>
                                     <artifactId>jodit</artifactId>
                                     <version>3.5.4</version>
-<!--                                    <includes>**/dist/summernote-lite*min.js,**/dist/summernote-lite.css,**/dist/font/*.woff,**/dist/lang/*.min.js</includes>-->
                                     <includes>**/jodit.min.*,**/*.css</includes>
-
                                     <excludes>**/*.map</excludes>
                                 </artifactItem>
-<!--                                <artifactItem>
-                                    <groupId>org.webjars.npm</groupId>
-                                    <artifactId>mark.js</artifactId>
-                                    <version>8.11.1</version>
-                                    <includes>**/dist/jquery.mark.min.js</includes>
-                                </artifactItem>-->
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/webjars</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
