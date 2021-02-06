@@ -76,15 +76,9 @@
                         </goals>
                         <configuration>
                             <resources>
-<!--                                <resource>
-                                    <directory>${project.build.directory}/webjars/META-INF/resources/webjars/jquery/3.3.1/dist</directory>
-                                </resource>-->
                                 <resource>
                                     <directory>${project.build.directory}/webjars/META-INF/resources/webjars/jodit/3.5.4/build</directory>
                                 </resource>
-<!--                                <resource>
-                                    <directory>${project.build.directory}/webjars/META-INF/resources/webjars/mark.js/8.11.1/dist</directory>
-                                </resource>             -->
                             </resources>
                         </configuration>
                     </execution>
