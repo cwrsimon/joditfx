@@ -16,9 +16,6 @@ import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
-* TODO Rearrange editor toolbar symbols without line breaks
-*/
 public class JoditFx extends StackPane {
 
     final WebView webview = new WebView();
@@ -65,13 +62,6 @@ public class JoditFx extends StackPane {
         return contentUpdate.get();
     }
 
-    @Deprecated
-    public void setCssStyle(String styleName, String value) {
-        webview.getEngine().executeScript("setInlineStyle('"
-                + styleName + "','" + value + "');");
-    }
-
-    
     public JoditFx(HostServices hostServices, String editorContent, Map<String, String> extraCSSProperties) {
         this.hostServices = hostServices;
 
@@ -81,7 +71,7 @@ public class JoditFx extends StackPane {
 
         final JoditFx backReference = this;
         webview.getEngine().getLoadWorker().stateProperty().addListener(
-                new LoadedListener(backReference, editorContent, extraCSSProperties));
+                new LoadedListener(backReference, editorContent));
         webview.getEngine().getLoadWorker().exceptionProperty().addListener((ObservableValue<? extends Throwable> ov, Throwable t, Throwable t1) -> {
             getLogger().error("JoditFX Webview exception, ov: {}", ov.getValue().getLocalizedMessage(), ov.getValue());
             getLogger().error("JoditFX Webview exception, t: {}", t.getLocalizedMessage(), t);
