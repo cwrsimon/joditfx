@@ -1,6 +1,5 @@
-# summernotefx
-SummernoteFX is a simple wrapper that allows using the summernote HTML 
-editor from [summernote.org](https://www.summernote.org) as a JavaFX component. It is implemented in Java 11 and uses OpenJFX 12.
+# joditfx
+
 
 ![Screenshot](https://raw.github.com/cwrsimon/summernotefx/master/src/main/screenshots/screenshot1.png)
 
@@ -14,7 +13,7 @@ editor from [summernote.org](https://www.summernote.org) as a JavaFX component. 
 ```
 3. Run the demo app from the commmand-line:
 ```
-./mvnw exec:java -Dexec.mainClass="de.wesim.summernotefx.DemoApp"
+./mvnw exec:java -Dexec.mainClass="de.wesim.joditfx.DemoApp"
 ```
 4. Or, run the demo app from inside your IDE:
 Locate *src/test/java/de/wesim/summernotefx/* and run *RunDemoAppInIDE.java*.
@@ -22,11 +21,10 @@ Locate *src/test/java/de/wesim/summernotefx/* and run *RunDemoAppInIDE.java*.
 ```
 <dependency>
 	<groupId>de.wesim</groupId>
-	<artifactId>summernotefx</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>joditfx</artifactId>
+	<version>0.2.0-SNAPSHOT</version>
 </dependency>
 ```
 # Planned features
 - deployment to Maven Central Repository
-- more configuration options that cover more of the many options offered by *summernote*
 
