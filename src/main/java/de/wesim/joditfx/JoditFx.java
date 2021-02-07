@@ -1,4 +1,4 @@
-package de.wesim.summernotefx;
+package de.wesim.joditfx;
 
 import com.sun.javafx.webkit.WebConsoleListener;
 import org.apache.commons.text.StringEscapeUtils;
@@ -16,16 +16,11 @@ import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SummerNoteEditor extends StackPane {
+public class JoditFx extends StackPane {
 
     final WebView webview = new WebView();
 
     private final HostServices hostServices;
-
-    public void findItems(String entered) {
-        final String content_js = StringEscapeUtils.escapeEcmaScript(entered);
-        webview.getEngine().executeScript("findOccurrences('" + content_js + "');");
-    }
 
     private String getHTMLContent() {
         final String editingCode = (String) webview.getEngine().executeScript("getEditorContent();");
@@ -67,26 +62,20 @@ public class SummerNoteEditor extends StackPane {
         return contentUpdate.get();
     }
 
-    public void setCssStyle(String styleName, String value) {
-        webview.getEngine().executeScript("setInlineStyle('"
-                + styleName + "','" + value + "');");
-    }
-
-    
-    public SummerNoteEditor(HostServices hostServices, String editorContent, Map<String, String> extraCSSProperties) {
+    public JoditFx(HostServices hostServices, String editorContent, Map<String, String> extraCSSProperties) {
         this.hostServices = hostServices;
 
         WebConsoleListener.setDefaultListener((WebView wv, String msg, int i, String source) -> {
             getLogger().info("JS Console [{}, {}]: {}", source, i, msg);
         });
 
-        final SummerNoteEditor backReference = this;
+        final JoditFx backReference = this;
         webview.getEngine().getLoadWorker().stateProperty().addListener(
-                new SummernoteWhenLoadedListener(backReference, editorContent, extraCSSProperties));
+                new LoadedListener(backReference, editorContent));
         webview.getEngine().getLoadWorker().exceptionProperty().addListener((ObservableValue<? extends Throwable> ov, Throwable t, Throwable t1) -> {
-            getLogger().error("SummernoteEditorFX Webview exception, ov: {}", ov.getValue().getLocalizedMessage(), ov.getValue());
-            getLogger().error("SummernoteEditorFX Webview exception, t: {}", t.getLocalizedMessage(), t);
-            getLogger().error("SummernoteEditorFX Webview exception, t1: {}", t1.getLocalizedMessage(), t1);
+            getLogger().error("JoditFX Webview exception, ov: {}", ov.getValue().getLocalizedMessage(), ov.getValue());
+            getLogger().error("JoditFX Webview exception, t: {}", t.getLocalizedMessage(), t);
+            getLogger().error("JoditFX Webview exception, t1: {}", t1.getLocalizedMessage(), t1);
         });
 
         webview.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -96,10 +85,12 @@ public class SummerNoteEditor extends StackPane {
         });
 
         var htmlSource = prepareHtmlSource();
+        var cssURL = prepareCssUrl();
         htmlSource = addI18NSupport(htmlSource);
-        // TODO make this a debug feature with a source target
+        // TODO make this a debug feature
         // dump generated HTML source when you need it
         // getLogger().info(htmlSource);
+        webview.getEngine().setUserStyleSheetLocation(cssURL);
         webview.getEngine().loadContent(htmlSource);
         this.getChildren().add(webview);
     }
@@ -112,17 +103,18 @@ public class SummerNoteEditor extends StackPane {
         return this.webview;
     }
 
+    private String prepareCssUrl() {
+        final URL summernoteCSSResource = JoditFx.class.getResource("/jodit.min.css");
+        return summernoteCSSResource.toExternalForm();
+    }
+    
     private String prepareHtmlSource() {
-        final URL jQueryResource = SummerNoteEditor.class.getResource("/jquery.slim.min.js");
-        final URL summernoteLiteJS = SummerNoteEditor.class.getResource("/summernote-lite.min.js");
-        final URL summernoteCSSResource = SummerNoteEditor.class.getResource("/summernote-lite.css");
-        final URL markJSResource = SummerNoteEditor.class.getResource("/jquery.mark.min.js");
-        final URL fontResource = SummerNoteEditor.class.getResource("/font/summernote.woff");
-        final URL summernoteHTMLResource = SummerNoteEditor.class.getResource("/de/wesim/summernotefx/summernote.html");
-
+        final URL summernoteLiteJS = JoditFx.class.getResource("/jodit.min.js");
+        final URL summernoteHTMLResource = JoditFx.class.getResource("/de/wesim/joditfx/joditfx.html");
+        
         var htmlSource = "ERROR";
-        if (jQueryResource == null || summernoteLiteJS == null || summernoteCSSResource == null
-                || markJSResource == null || fontResource == null || summernoteHTMLResource == null) {
+        if ( summernoteLiteJS == null 
+                || summernoteHTMLResource == null) {
             return htmlSource;
         }
         try (InputStream summernoteHTMLIS = summernoteHTMLResource.openStream()) {
@@ -131,33 +123,15 @@ public class SummerNoteEditor extends StackPane {
             getLogger().error("Loading HTML source failed: {}", ex.getLocalizedMessage(), ex);
             return htmlSource;
         }
-        final String jqueryURL = jQueryResource.toExternalForm();
         final String summernoteLiteJSURL = summernoteLiteJS.toExternalForm();
-        final String summernoteCSSURL = summernoteCSSResource.toExternalForm();
-        final String markJSURL = markJSResource.toExternalForm();
-        final String fontURL = fontResource.toExternalForm();
-        htmlSource = htmlSource.replace("%SUMMERNOTE_FONT%", fontURL);
-        htmlSource = htmlSource.replace("%JQUERY_URL%", jqueryURL);
         htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
-        htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_CSS_URL%", summernoteCSSURL);
-        htmlSource = htmlSource.replace("%MARK_JS_URL%", markJSURL);
 
         return htmlSource;
     }
 
     private String addI18NSupport(String htmlSource) {
-        String locale = System.getProperty("user.language") + "-" + System.getProperty("user.country");
-        final String variant = System.getProperty("user.variant");
-        if (variant != null) {
-            locale = locale + "-" + variant;
-        }
-        var i18NFile = SummerNoteEditor.class.getResource("/lang/summernote-" + locale + ".min.js");
-        if (i18NFile == null) {
-            return htmlSource;
-        }
-        final String i18NURL = i18NFile.toExternalForm();
-        htmlSource = htmlSource.replace("%I18N_URL%", i18NURL);
-        htmlSource = htmlSource.replace("en-US", locale);
+        var locale = System.getProperty("user.language");
+        htmlSource = htmlSource.replace("%I18N%", locale);
         return htmlSource;
     }
 }

@@ -1,2 +1,6 @@
-bla.html
 target/
+.classpath
+.project
+.settings
+.vscode
+
