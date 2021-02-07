@@ -3,13 +3,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.wesim</groupId>
     <artifactId>joditfx</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
