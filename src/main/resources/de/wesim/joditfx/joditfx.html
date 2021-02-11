@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Summernote Editor</title>
-    <!-- <link href="%SUMMERNOTE_LITE_CSS_URL%" type="text/css" rel="stylesheet"> -->
-    <script src="%SUMMERNOTE_LITE_JS_URL%"></script>
+    <title>Jodit Editor</title>
+    <!-- <link href="%JODIT_CSS_URL%" type="text/css" rel="stylesheet"> -->
+    <script src="%JODIT_JS_URL%"></script>
     <style>
         html,
         body {
@@ -28,20 +28,20 @@
 
 <body>
     <div id="editor"></div>
+    
     <script>
 
         // Initialisierung hier
         const jodit = new Jodit('#editor', {
             "defaultFontSizePoints": "pt",
-            "uploader": {
-                "insertImageAsBase64URI": true
-            },
+            "disablePlugins":"clipboard,uploader,image",
             "height": "100%",
             "triggerChangeEvent": true,
-            "disablePlugins": "source,copy-format,preview,print,video,file,media,sticky,fullsize,about",
             "toolbarButtonSize": "small",
             "language": "%I18N%",
-            
+            "defaultActionOnPaste":"insert_as_html",
+            "askBeforePasteHTML":true,
+            "processPasteHTML":false,
             "buttons": [
                 'paragraph', '|',
                 'bold',
@@ -54,7 +54,6 @@
                 'font',
                 'fontsize',
                 'brush',
-                'image',
                 'table',
                 'link', '|',
                 'align', 'undo', 'redo', '|',
@@ -74,7 +73,6 @@
                 'font',
                 'fontsize',
                 'brush',
-                'image',
                 'table',
                 'link', '|',
                 'align', 'undo', 'redo', '|',
@@ -94,7 +92,6 @@
                 'font',
                 'fontsize',
                 'brush',
-                'image',
                 'table',
                 'link', '|',
                 'align', 'undo', 'redo', '|',
@@ -114,7 +111,6 @@
         });
 
         const send_content_update = function (event) {
-            console.log(event);
             if (typeof window.app !== 'undefined') {
                 window.app.setContentUpdate(true);
             }
@@ -135,9 +131,6 @@
                 editor_node.addEventListener("change", send_content_update)
                 , 500);
         };
-
-        // TODO Remove this ASAP
-        //setInlineStyle = function (style_name, value) { }
 
         window.open = function (param) {
             window.app.openURL(param);

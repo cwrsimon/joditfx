@@ -104,27 +104,27 @@ public class JoditFx extends StackPane {
     }
 
     private String prepareCssUrl() {
-        final URL summernoteCSSResource = JoditFx.class.getResource("/jodit.min.css");
-        return summernoteCSSResource.toExternalForm();
+        final URL joditCSSResource = JoditFx.class.getResource("/jodit.min.css");
+        return joditCSSResource.toExternalForm();
     }
     
     private String prepareHtmlSource() {
-        final URL summernoteLiteJS = JoditFx.class.getResource("/jodit.min.js");
-        final URL summernoteHTMLResource = JoditFx.class.getResource("/de/wesim/joditfx/joditfx.html");
+        final URL joditJS = JoditFx.class.getResource("/jodit.min.js");
+        final URL joditHTMLResource = JoditFx.class.getResource("/de/wesim/joditfx/joditfx.html");
         
         var htmlSource = "ERROR";
-        if ( summernoteLiteJS == null 
-                || summernoteHTMLResource == null) {
+        if ( joditJS == null 
+                || joditHTMLResource == null) {
             return htmlSource;
         }
-        try (InputStream summernoteHTMLIS = summernoteHTMLResource.openStream()) {
-            htmlSource = new String(summernoteHTMLIS.readAllBytes(), "UTF-8");
+        try (InputStream joditHTMLIS = joditHTMLResource.openStream()) {
+            htmlSource = new String(joditHTMLIS.readAllBytes(), "UTF-8");
         } catch (IOException ex) {
             getLogger().error("Loading HTML source failed: {}", ex.getLocalizedMessage(), ex);
             return htmlSource;
         }
-        final String summernoteLiteJSURL = summernoteLiteJS.toExternalForm();
-        htmlSource = htmlSource.replace("%SUMMERNOTE_LITE_JS_URL%", summernoteLiteJSURL);
+        final String joditJSURL = joditJS.toExternalForm();
+        htmlSource = htmlSource.replace("%JODIT_JS_URL%", joditJSURL);
 
         return htmlSource;
     }

@@ -1,7 +1,7 @@
 # joditfx
 
 
-![Screenshot](https://raw.github.com/cwrsimon/summernotefx/master/src/main/screenshots/screenshot1.png)
+![Screenshot](https://raw.github.com/cwrsimon/joditfx/master/src/main/screenshots/screenshot1.png)
 
 # Getting started
 
@@ -16,13 +16,25 @@
 ./mvnw exec:java -Dexec.mainClass="de.wesim.joditfx.DemoApp"
 ```
 4. Or, run the demo app from inside your IDE:
-Locate *src/test/java/de/wesim/summernotefx/* and run *RunDemoAppInIDE.java*.
-5. Integrate *summernotefx* in your own Javafx project with this XML snippet:
+Locate *src/test/java/de/wesim/joditfx/* and run *RunDemoAppInIDE.java*.
+5. Integrate *joditfx* in your own Javafx project with this XML snippet:
 ```
+<repositories>
+        <repository>
+            <id>mvn-repo</id>
+            <url>https://github.com/cwrsimon/artifacts/raw/master</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+</repositories>
 <dependency>
 	<groupId>de.wesim</groupId>
 	<artifactId>joditfx</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.1</version>
 </dependency>
 ```
 # Planned features
