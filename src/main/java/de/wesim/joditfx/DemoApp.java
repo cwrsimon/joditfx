@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+// TODO Upgrade to Jdk 16 and JavaFX 16
+// TODO Integrate https://bugs.openjdk.java.net/browse/JDK-8253696
 // TODO Integrate content update
 public class DemoApp extends Application {
     
